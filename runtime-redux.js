@@ -6,11 +6,11 @@ const createDispatcher = () => {
     subscribe: (listener) => {
       listeners.push(listener)
       return () => {
-          listeners = listeners.filter(l => l !== listener)
+        listeners = listeners.filter(l => l !== listener)
       }
     },
     dispatch: (action) => {
-        listeners.slice().forEach(listener => listener(action))
+      listeners.slice().forEach(listener => listener(action))
     }
   }
 }
@@ -22,29 +22,27 @@ const TYPE_PUT  = 'put'
 const TYPE_TAKE = 'take'
 
 const is = {
-  put      : value => typeof value === 'object' && value.type === TYPE_PUT,
-  take     : value => typeof value === 'object' && value.type === TYPE_TAKE,
+  put  : value => typeof value === 'object' && value.type === TYPE_PUT,
+  take : value => typeof value === 'object' && value.type === TYPE_TAKE,
 }
 
 export const reduxControls = (store) => {
-  const putControl = {
-    match: is.put,
-    resolve: (value, runtime, next, raise) => {
-      store.dispatch(value.action)
-      next(value.action)
-    }
+  const putControl = (value, runtime, next, raise) => {
+    if (!is.put(value)) return false
+    store.dispatch(value.action)
+    next(value.action)
+    return true
   }
 
-  const takeControl = {
-    match: is.take,
-    resolve: (value, runtime, next, raise) => {
-      const unsubscribe = dispatcher.subscribe(action => {
-        if (action.type === value.action) {
-          unsubscribe()
-          next(action)
-        }
-      })
-    }
+  const takeControl = (value, runtime, next, raise) => {
+    if (!is.take(value)) return false
+    const unsubscribe = dispatcher.subscribe(action => {
+      if (action.type === value.action) {
+        unsubscribe()
+        next(action)
+      }
+    })
+    return true
   }
 
   return [ putControl, takeControl ]

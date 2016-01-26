@@ -16,10 +16,10 @@ So by default, the runtime has basically the same behaviour as co but you can ad
 How to create a control ?
 -------------------------
 
-A control is an object with two methods : match and resolve :
- * The *match* function   : returns true if the current control can resolve this yieldable value passed as argument.
- * The *resolve* function : has this signature `(value, next, runtime, raise, yieldNext) => void` is responsible of handling this yieldable value using one of the different callbacks passed as arguments :
-   * the `next` callback : we call this with a resolved value, when we handled the current value and we have no idea about the result
+A control is an function with the following signature `(value, next, runtime, raise, yieldNext) => bool`
+ * the function returns a boolean whether or not, it handls the yielded value passed as argument
+ * It should call one theses callbacks:
+   * the `next` callback : we call this with a resolved value, when we handled the current value and we have no idea about the result (like promises)
    * the `raise` callback : called to trigger an error (catched using try/catch in the generator)
    * the `runtime` callback : we call this when the resolved value is a generator (or iterator) (nesting)
    * the `yieldNext` callback : is some sort of a shortcut to avoid infinite loops. This is not used so much, but can be usefull for example in the arrayControl which takes an array and yields an array as a result

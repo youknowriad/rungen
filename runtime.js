@@ -26,47 +26,46 @@ const is = {
 }
 
 // Default Controls
-const finalControl = {
-    match: () => true,
-    resolve: (value, runtime, next, raise, nextYield) => nextYield(value)
+const finalControl = (value, runtime, next, raise, nextYield) => {
+  nextYield(value)
+  return true
 }
 
-const arrayControl = {
-  match: is.array,
-  resolve: (value, runtime, next, raise, nextYield) => {
-    let results = []
-    runtime(function* () {
-      for (let i of value) {
-        results[value.indexOf(i)] = yield i
-      }
-    }(), () => nextYield(results))
-  },
+const arrayControl = (value, runtime, next, raise, nextYield) => {
+  if (!is.array(value)) return false
+  let results = []
+  runtime(function* () {
+    for (let i of value) {
+      results[value.indexOf(i)] = yield i
+    }
+  }(), () => nextYield(results))
+  return true
 }
 
-const promiseControl = {
-  match: is.promise,
-  resolve: (value, runtime, next, raise) => value.then(next, raise)
+const promiseControl = (value, runtime, next, raise) => {
+  if (!is.promise(value)) return false
+  value.then(next, raise)
+  return true
 }
 
-const iteratorControl = {
-  match: is.iterator,
-  resolve: (value, runtime, next, raise) => runtime(value, val => next(val))
+const iteratorControl = (value, runtime, next, raise) => {
+  if (!is.iterator(value)) return false
+  runtime(value, val => next(val))
+  return true
 }
 
-const callControl = {
-  match: is.call,
-  resolve: (value, runtime, next, raise) => {
-    const { context, callback, args } = value
-    next(callback.apply(context, args))
-  }
+const callControl = (value, runtime, next, raise) => {
+  if (!is.call(value)) return false
+  const { context, callback, args } = value
+  next(callback.apply(context, args))
+  return true
 }
 
-const forkControl = {
-  match: is.fork,
-  resolve: (value, runtime, next, raise) => {
-    runtime(value.iterator.apply(null, value.args))
-    next(true)
-  }
+const forkControl = (value, runtime, next, raise) => {
+  if (!is.fork(value)) return false
+  runtime(value.iterator.apply(null, value.args))
+  next(true)
+  return true
 }
 
 // Runtime
@@ -78,8 +77,7 @@ export const createRuntime = (userControls = []) => (generator, ...args) => {
     const raise = err => gen.throw(err)
 
     const next = ret => {
-      const control = controls.find(control => control.match(ret))
-      control.resolve(ret, runtime, next, raise, yieldNext)
+      controls.some(control => control(ret, runtime, next, raise, yieldNext))
     }
 
     const yieldNext = ret => {
