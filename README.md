@@ -46,6 +46,7 @@ Trying
 There's two example in the repo, you can run easily using [run-js](https://github.com/remixz/run-js)
 
 ```javascript
+npm install babel-preset-es2015 babel-preset-stage-0
 npm install -g run-js && run-js
 ```
 
