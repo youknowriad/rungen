@@ -26,6 +26,11 @@ const is = {
 }
 
 // Default Controls
+const finalControl = {
+    match: () => true,
+    resolve: (value, runtime, next, raise, nextYield) => nextYield(value)
+}
+
 const arrayControl = {
   match: is.array,
   resolve: (value, runtime, next, raise, nextYield) => {
@@ -65,7 +70,7 @@ const forkControl = {
 }
 
 // Runtime
-const defaultControls = [ promiseControl, iteratorControl, callControl, arrayControl, forkControl ]
+const defaultControls = [ promiseControl, iteratorControl, callControl, arrayControl, forkControl, finalControl ]
 export const createRuntime = (userControls = []) => (generator, ...args) => {
   const runtime = (gen, success = () => {}) => {
     const controls = [ ...userControls, ...defaultControls ]
@@ -74,8 +79,7 @@ export const createRuntime = (userControls = []) => (generator, ...args) => {
 
     const next = ret => {
       const control = controls.find(control => control.match(ret))
-      if (control) return control.resolve(ret, runtime, next, raise, yieldNext)
-      yieldNext(ret)
+      control.resolve(ret, runtime, next, raise, yieldNext)
     }
 
     const yieldNext = ret => {
@@ -84,7 +88,7 @@ export const createRuntime = (userControls = []) => (generator, ...args) => {
       next(value)
     }
 
-    return next()
+    next()
   }
 
   const gen = generator.apply(null, args)

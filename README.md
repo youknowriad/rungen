@@ -2,7 +2,8 @@ Generator Runtime Experiment
 ============================
 
 This is just an experiment, not meant to be used in prod.
-The idea is the ability to create a generic runtime to handle async flow. Somthing like [co](https://github.com/tj/co) but more generic.
+The idea is the ability to create a generic runtime to handle async flow.
+Something like [co](https://github.com/tj/co) but more generic.
 
 Generic ?
 ---------
@@ -10,12 +11,12 @@ Generic ?
 Co handles automatically promises, iterators, arrays etc..., the idea of genericity here is the ability to perform a custom process on any value depending on your needs.
 We call these custom processes : controls.
 
-So by default, the runtime has basically the same behaviour as co but you can extend add more yieldable values by creating custom controls.
+So by default, the runtime has basically the same behaviour as co but you can add more yieldable values by creating custom controls.
 
 How to create a control ?
 -------------------------
 
-a control is an object with two methods : match and resolve :
+A control is an object with two methods : match and resolve :
  * The *match* function   : returns true if the current control can resolve this yieldable value passed as argument.
  * The *resolve* function : has this signature `(value, next, runtime, raise, yieldNext) => void` is responsible of handling this yieldable value using one of the different callbacks passed as arguments :
    * the `next` callback : we call this with a resolved value, when we handled the current value and we have no idea about the result
@@ -26,7 +27,7 @@ a control is an object with two methods : match and resolve :
 Usage
 -----
 
-```
+```javascript
 const customControls = []
 import {createRuntime} from './runtime';
 const runtime = createRuntime(customControls)
@@ -43,12 +44,14 @@ I used this generic mecanisme to create something similar to [redux-saga](https:
 Trying
 ------
 
-There's two example in the repo, you can run easily using [run-js](https://github.com/remixz/run-js)
+There's two examples in the repo, you can run easily using [run-js](https://github.com/remixz/run-js)
 
-```javascript
+```shell
 npm install babel-preset-es2015 babel-preset-stage-0
 npm install -g run-js && run-js
 ```
 
  * [http://localhost:60274](localhost:60274) for the default example
  * [http://localhost:60274/redux.html](localhost:60274) for the redux example
+
+Then check the console for the output
