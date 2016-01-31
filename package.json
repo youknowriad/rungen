@@ -1,6 +1,6 @@
 {
   "name": "rungen",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A generator runtime creator",
   "main": "dist/index.js",
   "devDependencies": {
@@ -25,12 +25,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/youknowriad/generator-runtime-experiment.git"
+    "url": "git+https://github.com/youknowriad/rungen.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Riad Benguella <riad@rizeway.com>",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/youknowriad/generator-runtime-experiment/issues"
+    "url": "https://github.com/youknowriad/rungen/issues"
   },
-  "homepage": "https://github.com/youknowriad/generator-runtime-experiment#readme"
+  "homepage": "https://github.com/youknowriad/rungen#readme"
 }

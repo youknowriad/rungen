@@ -22,7 +22,7 @@ export const race = (competitors) => ({
 })
 
 export const delay = (timeout) => new Promise(resolve => {
-  setTimeout(resolve, timeout)
+  setTimeout(() => resolve(true), timeout)
 })
 
 export const invoke = (func, ...args) => ({

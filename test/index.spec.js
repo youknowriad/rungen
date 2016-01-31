@@ -1,6 +1,10 @@
 import 'babel-polyfill'
 import expect from 'expect'
-import {create, fork, join, error, delay, asyncControls} from '../src/index'
+import {
+  create, fork, join, error, delay,
+  invoke, call, apply, cps,
+  asyncControls, wrapControls
+} from '../src/index'
 
 describe('Library API', () => {
   it('the library export create runtime', () => {
@@ -12,9 +16,14 @@ describe('Library API', () => {
     expect(join).toExist()
     expect(error).toExist()
     expect(delay).toExist()
+    expect(invoke).toExist()
+    expect(call).toExist()
+    expect(apply).toExist()
+    expect(cps).toExist()
   })
 
-  it('the library export async controls', () => {
+  it('the library export controls', () => {
     expect(asyncControls).toExist()
+    expect(wrapControls).toExist()
   })
 })
