@@ -9,7 +9,9 @@ const is = {
   iterator : value => value && is.func(value.next) && is.func(value[Symbol.iterator]),
   fork     : value => is.obj(value) && value.type === keys.fork,
   join     : value => is.obj(value) && value.type === keys.join,
-  race     : value => is.obj(value) && value.type === keys.race
+  race     : value => is.obj(value) && value.type === keys.race,
+  call     : value => is.obj(value) && value.type === keys.call,
+  cps      : value => is.obj(value) && value.type === keys.cps
 }
 
 export default is

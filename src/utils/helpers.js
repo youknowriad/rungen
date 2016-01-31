@@ -24,3 +24,30 @@ export const race = (competitors) => ({
 export const delay = (timeout) => new Promise(resolve => {
   setTimeout(resolve, timeout)
 })
+
+export const invoke = (func, ...args) => ({
+  type: keys.call,
+  func: func,
+  context: null,
+  args: args
+})
+
+export const call = (func, context, ...args) => ({
+  type: keys.call,
+  func: func,
+  context: context,
+  args: args
+})
+
+export const apply = (func, context, args) => ({
+  type: keys.call,
+  func: func,
+  context: context,
+  args: args
+})
+
+export const cps = (func, ...args) => ({
+  type: keys.cps,
+  func: func,
+  args: args
+})
