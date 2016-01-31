@@ -21,7 +21,8 @@
     "compile": "rimraf lib && babel -d dist/ src/",
     "prepublish": "npm run test && npm run compile",
     "unit": "mocha --compilers js:babel-register --recursive test",
-    "test": "npm run lint && npm run unit"
+    "test": "npm run lint && npm run unit",
+    "changelog": "conventional-changelog -i CHANGELOG.md -w -r 0 -p angular"
   },
   "repository": {
     "type": "git",
