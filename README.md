@@ -11,7 +11,7 @@ API
 If you're familiar with co, The API here is slitely different. Instead of taking a generator and returning a promise.
 We can take basically any value (pass in an iterator to have the same behavior as co for generators) and as a result uses callbacks instead of a promise.
 
-`
+```javascript
 import {create} from 'rungen'
 const myGenerator*() {
   yield new Promise()
@@ -21,11 +21,11 @@ const runtime = create()
 const onSuccess = value => console.log('success : ' + value)
 const onError = error => console.log('error : ' + error)
 runtime(myGenerator(), onSuccess, onError)
-`
+```
 
 If you want to have a similar API than `co`, It's as easy as
 
-`
+```javascript
 const runtime = create()
 const co = (input, ...args) => new Promise((resolve, reject) =>
   rungen(input.apply(null, args), resolve, reject)
@@ -33,7 +33,7 @@ const co = (input, ...args) => new Promise((resolve, reject) =>
 co.wrap = input => runtime.bind(this, input)
 
 co(myGenerator, onSuccess, onError)
-`
+```
 
 Generic ?
 ---------
