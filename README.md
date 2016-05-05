@@ -5,6 +5,36 @@ This library provides a generic runtime around async flow in javascript.
 This provides something like [co](https://github.com/tj/co) with the ability to extend its behaviour.
 This is also largely inspired from [redux-saga](https://github.com/yelouafi/redux-saga). It first started from the idea of decoupling redux-saga from redux.
 
+API
+---
+
+If you're familiar with co, The API here is slitely different. Instead of taking a generator and returning a promise.
+We can take basically any value (pass in an iterator to have the same behavior as co for generators) and as a result uses callbacks instead of a promise.
+
+`
+import {create} from 'rungen'
+const myGenerator*() {
+  yield new Promise()
+}
+
+const runtime = create()
+const onSuccess = value => console.log('success : ' + value)
+const onError = error => console.log('error : ' + error)
+runtime(myGenerator(), onSuccess, onError)
+`
+
+If you want to have a similar API than `co`, It's as easy as
+
+`
+const runtime = create()
+const co = (input, ...args) => new Promise((resolve, reject) =>
+  rungen(input.apply(null, args), resolve, reject)
+)
+co.wrap = input => runtime.bind(this, input)
+
+co(myGenerator, onSuccess, onError)
+`
+
 Generic ?
 ---------
 
@@ -28,9 +58,9 @@ const myGenerator = function*(input) {
 }
 
 // Run the generator
-runtime(myGenerator, 'any value').then(value => {
+runtime(myGenerator, 'any value', value => {
   console.log(value) // 'any value'
-}).catch(err => {
+}, err => {
   console.log(err)
 })
 ```
@@ -41,9 +71,9 @@ Instead of running your generator directly, you can also get a simple function f
 const myFunction = runtime.wrap(myGenerator)
 
 // Run it later
-myFunction('any value').then(value => {
+myFunction('any value', value => {
   console.log(value) // 'any value'
-}).catch(err => {
+}, err => {
   console.log(err)
 })
 ```
@@ -320,8 +350,8 @@ runtime(function* () {
 ```
 
 While this should be fine for almost all custom controls use cases, there are some cases when you would need to call some specific callbacks.
-The full signature of the control is : `(value, next, iterate, yieldNext, yieldError) => bool`
+The full signature of the control is : `(value, next, runtime, yieldNext, yieldError) => bool`
    * the `next` callback : we call this with a resolved value, when we handled the current value and we have no idea about the result (like promises)
-   * the `iterate` callback : we call this when the resolved value is a generator (or iterator) (nesting)
+   * the `runtime` callback : the runtime itself, can be used to perform nesting
    * the `yieldNext` callback : is a shortcut to avoid infinite loops, it directly yields the resolved value without trying to resolve it as well. This can be usefull to avoid infinte loops, for example in an arrayControl takes an array and yields an array as a result
    * the `yieldError` callback : called to trigger an error (that can be catched using try/catch in the generator)

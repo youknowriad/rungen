@@ -1,9 +1,10 @@
 import builtinControls from './controls/builtin'
+import is from './utils/is'
 
 const create = (userControls = []) => {
   const controls = [...userControls, ...builtinControls]
-  const runtime = (generator, ...args) => {
 
+  const runtime = (input, success = () => {}, error = () => {}) => {
     const iterate = (gen, success = () => {}, error = () => {}) => {
       const yieldValue = isError => ret => {
         try {
@@ -16,18 +17,20 @@ const create = (userControls = []) => {
       }
 
       const next = ret => {
-        controls.some(control => control(ret, next, iterate, yieldValue(false), yieldValue(true)))
+        controls.some(control => control(ret, next, runtime, yieldValue(false), yieldValue(true)))
       }
 
-      next()
+      yieldValue(false)()
     }
 
-    const gen = generator.apply(null, args)
+    const iterator = is.iterator(input)
+      ? input
+      : function* () {
+          return yield input
+        }()
 
-    return new Promise((resolve, reject) => iterate(gen, resolve, reject))
+    iterate(iterator, success, error)
   }
-
-  runtime.wrap = (generator) => (...args) => runtime(generator, ...args)
 
   return runtime
 }

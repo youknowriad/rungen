@@ -1,17 +1,17 @@
 import is from '../utils/is'
 
-export const all = (value, next, iterate, yieldNext) => {
+export const all = (value, next, rungen, yieldNext) => {
   yieldNext(value)
   return true
 }
 
-export const error = (value, next, iterate, yieldNext, raiseNext) => {
+export const error = (value, next, rungen, yieldNext, raiseNext) => {
   if (!is.error(value)) return false
   raiseNext(value.error)
   return true
 }
 
-export const object = (value, next, iterate, yieldNext, raiseNext) => {
+export const object = (value, next, rungen, yieldNext, raiseNext) => {
   if (!is.obj(value)) return false
   const result = {}
   const keys = Object.keys(value)
@@ -33,10 +33,8 @@ export const object = (value, next, iterate, yieldNext, raiseNext) => {
   }
 
   keys.map(key => {
-    iterate(
-      function* () {
-        return yield value[key]
-      }(),
+    rungen(
+      value[key],
       ret => gotResultSuccess(key, ret),
       err => gotResultError(key, err)
     )
@@ -45,7 +43,7 @@ export const object = (value, next, iterate, yieldNext, raiseNext) => {
   return true
 }
 
-export const array = (value, next, iterate, yieldNext, raiseNext) => {
+export const array = (value, next, rungen, yieldNext, raiseNext) => {
   if (!is.array(value)) return false
   const result = []
   let count = 0
@@ -66,10 +64,8 @@ export const array = (value, next, iterate, yieldNext, raiseNext) => {
   }
 
   value.map((v, key) => {
-    iterate(
-      function* () {
-        return yield v
-      }(),
+    rungen(
+      v,
       ret => gotResultSuccess(key, ret),
       err => gotResultError(key, err)
     )
@@ -78,9 +74,9 @@ export const array = (value, next, iterate, yieldNext, raiseNext) => {
   return true
 }
 
-export const iterator = (value, next, iterate, yieldNext, raiseNext) => {
+export const iterator = (value, next, rungen, yieldNext, raiseNext) => {
   if (!is.iterator(value)) return false
-  iterate(value, next, raiseNext)
+  rungen(value, next, raiseNext)
   return true
 }
 

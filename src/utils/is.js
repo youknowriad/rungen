@@ -6,7 +6,7 @@ const is = {
   array    : Array.isArray,
   func     : value => typeof value === 'function',
   promise  : value => value && is.func(value.then),
-  iterator : value => value && is.func(value.next) && is.func(value[Symbol.iterator]),
+  iterator : value => value && is.func(value.next) && is.func(value.throw),
   fork     : value => is.obj(value) && value.type === keys.fork,
   join     : value => is.obj(value) && value.type === keys.join,
   race     : value => is.obj(value) && value.type === keys.race,

@@ -16,7 +16,7 @@ describe('Default controls', () => {
     }
     const expected = 'promise'
 
-    runtime(generator).then(() => {
+    runtime(generator(), () => {
       expect(output).toEqual(expected)
       done()
     })
@@ -37,7 +37,7 @@ describe('Default controls', () => {
     }
     const expected = 'err'
 
-    runtime(generator).then(() => {
+    runtime(generator(), () => {
       expect(output).toEqual(expected)
       done()
     })
@@ -59,7 +59,7 @@ describe('Default controls', () => {
     }
     const expected = [1, 2, 2, 1]
 
-    runtime(generator)
+    runtime(generator())
     delay(12).then(() => {
       expect(output).toEqual(expected)
       done()
@@ -82,7 +82,7 @@ describe('Default controls', () => {
     }
     const expected = [1, 2]
 
-    runtime(generator)
+    runtime(generator())
     delay(12).then(() => {
       expect(output).toEqual(expected)
       done()
@@ -107,7 +107,7 @@ describe('Default controls', () => {
     }
     const expected = 'error'
 
-    runtime(generator)
+    runtime(generator())
     delay(12).then(() => {
       expect(output).toEqual(expected)
       done()
@@ -132,7 +132,7 @@ describe('Default controls', () => {
     }
     const expected = 'join error : task not found'
 
-    runtime(generator)
+    runtime(generator())
     delay(12).then(() => {
       expect(output).toEqual(expected)
       done()
@@ -154,7 +154,7 @@ describe('Default controls', () => {
     }
     const expected = [ false, 2 ]
 
-    runtime(generator)
+    runtime(generator())
     delay(12).then(() => {
       expect(output).toEqual(expected)
       done()
@@ -176,7 +176,7 @@ describe('Default controls', () => {
     }
     const expected = { a: false, b: 2 }
 
-    runtime(generator)
+    runtime(generator())
     delay(12).then(() => {
       expect(output).toEqual(expected)
       done()
@@ -206,7 +206,7 @@ describe('Default controls', () => {
     }
     const expected = 'fail'
 
-    runtime(generator)
+    runtime(generator())
     delay(12).then(() => {
       expect(output).toEqual(expected)
       done()

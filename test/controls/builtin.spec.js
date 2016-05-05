@@ -18,7 +18,7 @@ describe('Builtin Controls', () => {
     const runtime = create()
     const expected = ['test']
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
@@ -40,7 +40,7 @@ describe('Builtin Controls', () => {
     const runtime = create()
     const expected = [1, 2, 3]
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
@@ -59,7 +59,7 @@ describe('Builtin Controls', () => {
     const runtime = create()
     const expected = 'error'
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
@@ -76,7 +76,7 @@ describe('Builtin Controls', () => {
     const runtime = create()
     const expected = ['a', 'c', 'b']
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
@@ -94,7 +94,7 @@ describe('Builtin Controls', () => {
     const runtime = create()
     const expected = 'test'
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
@@ -113,7 +113,7 @@ describe('Builtin Controls', () => {
     const runtime = create()
     const expected = { a : 'a', b : 'b', c : 'c' }
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
@@ -129,7 +129,7 @@ describe('Builtin Controls', () => {
     const runtime = create()
     const expected = 'test'
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 })

@@ -2,21 +2,23 @@ import is from '../utils/is'
 import {error} from '../utils/helpers'
 import createDispatcher from '../utils/dispatcher'
 
-export const promise = (value, next, iterate, yieldNext, raiseNext) => {
+export const promise = (value, next, rungen, yieldNext, raiseNext) => {
   if (!is.promise(value)) return false
   value.then(next, raiseNext)
   return true
 }
 
 const forkedTasks = new Map()
-export const fork = (value, next, iterate) => {
+export const fork = (value, next, rungen) => {
   if (!is.fork(value)) return false
   const task = Symbol('fork')
   const dispatcher = createDispatcher()
   forkedTasks.set(task, dispatcher)
-  iterate(function* () {
-    return yield value.iterator.apply(null, value.args)
-  }(), result => dispatcher.dispatch(result), err => dispatcher.dispatch(error(err)))
+  rungen(
+    value.iterator.apply(null, value.args),
+    result => dispatcher.dispatch(result),
+    err => dispatcher.dispatch(error(err))
+  )
   const unsubscribe = dispatcher.subscribe(() => {
     unsubscribe()
     forkedTasks.delete(task)
@@ -25,7 +27,7 @@ export const fork = (value, next, iterate) => {
   return true
 }
 
-export const join = (value, next, iterate, yieldNext, raiseNext) => {
+export const join = (value, next, rungen, yieldNext, raiseNext) => {
   if (!is.join(value)) return false
   const dispatcher = forkedTasks.get(value.task)
   if (!dispatcher) {
@@ -39,7 +41,7 @@ export const join = (value, next, iterate, yieldNext, raiseNext) => {
   return true
 }
 
-export const race = (value, next, iterate, yieldNext, raiseNext) => {
+export const race = (value, next, rungen, yieldNext, raiseNext) => {
   if (!is.race(value)) return false
   let finished = false
   const success = (result, k, v) => {
@@ -56,9 +58,7 @@ export const race = (value, next, iterate, yieldNext, raiseNext) => {
   if (is.array(value.competitors)) {
     const result = value.competitors.map(() => false)
     value.competitors.forEach((competitor, index) => {
-      iterate(function* () {
-        return yield competitor
-      }(), output => success(result, index, output), fail)
+      rungen(competitor, output => success(result, index, output), fail)
     })
   }
   else {
@@ -67,9 +67,7 @@ export const race = (value, next, iterate, yieldNext, raiseNext) => {
       return p
     }, {})
     Object.keys(value.competitors).forEach(index => {
-      iterate(function* () {
-        return yield value.competitors[index]
-      }(), output => success(result, index, output), fail)
+      rungen(value.competitors[index], output => success(result, index, output), fail)
     })
   }
   return true

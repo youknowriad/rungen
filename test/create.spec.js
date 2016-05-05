@@ -15,28 +15,11 @@ describe('Default generator', () => {
     const runtime = create()
     const expected = ['a', 'b']
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
-  it('with no custom controls (using wrap)', () => {
-    const output = []
-    const generator = function* () {
-      let v
-      v = yield 'a'
-      output.push(v)
-      v = yield 'b'
-      output.push(v)
-    }
-    const runtime = create()
-    const wrapped = runtime.wrap(generator)
-    const expected = ['a', 'b']
-
-    wrapped()
-    expect(output).toEqual(expected)
-  })
-
-  it('with no custom controls (using returned promise)', done => {
+  it('with no custom controls using result callbac', done => {
     const output = []
     const generator = function* () {
       let v
@@ -48,7 +31,7 @@ describe('Default generator', () => {
     const runtime = create()
     const expected = ['a', 'b']
 
-    runtime(generator).then(() => {
+    runtime(generator(), () => {
       expect(output).toEqual(expected)
       done()
     })

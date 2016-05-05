@@ -14,7 +14,7 @@ describe('Wrap Controls', () => {
     const runtime = create([wrap.call])
     const expected = 'invoked'
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
@@ -30,7 +30,7 @@ describe('Wrap Controls', () => {
     const runtime = create([wrap.call])
     const expected = 'b invoked'
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
@@ -46,7 +46,7 @@ describe('Wrap Controls', () => {
     const runtime = create([wrap.call])
     const expected = 'b invoked'
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
@@ -63,7 +63,7 @@ describe('Wrap Controls', () => {
     const runtime = create([wrap.call])
     const expected = 'error'
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
@@ -78,7 +78,7 @@ describe('Wrap Controls', () => {
     const runtime = create([wrap.cps])
     const expected = 'invoked'
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 
@@ -97,7 +97,7 @@ describe('Wrap Controls', () => {
     const runtime = create([wrap.cps])
     const expected = 'error'
 
-    runtime(generator)
+    runtime(generator())
     expect(output).toEqual(expected)
   })
 })
