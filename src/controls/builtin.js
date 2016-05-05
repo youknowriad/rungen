@@ -13,25 +13,68 @@ export const error = (value, next, iterate, yieldNext, raiseNext) => {
 
 export const object = (value, next, iterate, yieldNext, raiseNext) => {
   if (!is.obj(value)) return false
-  iterate(function* () {
-    const result = {}
-    for (let key of Object.keys(value)) {
-      result[key] = yield value[key]
+  const result = {}
+  const keys = Object.keys(value)
+  let count = 0
+  let hasError = false
+  const gotResultSuccess = (key, ret) => {
+    if (hasError) return
+    result[key] = ret
+    count++
+    if (count === keys.length) {
+      yieldNext(result)
     }
-    return result
-  }(), yieldNext, raiseNext)
+  }
+
+  const gotResultError = (key, error) => {
+    if (hasError) return
+    hasError = true
+    raiseNext(error)
+  }
+
+  keys.map(key => {
+    iterate(
+      function* () {
+        return yield value[key]
+      }(),
+      ret => gotResultSuccess(key, ret),
+      err => gotResultError(key, err)
+    )
+  })
+
   return true
 }
 
 export const array = (value, next, iterate, yieldNext, raiseNext) => {
   if (!is.array(value)) return false
-  iterate(function* () {
-    const result = []
-    for (let [key, v] of value.entries()) {
-      result[key] = yield v
+  const result = []
+  let count = 0
+  let hasError = false
+  const gotResultSuccess = (key, ret) => {
+    if (hasError) return
+    result[key] = ret
+    count++
+    if (count === value.length) {
+      yieldNext(result)
     }
-    return result
-  }(), yieldNext, raiseNext)
+  }
+
+  const gotResultError = (key, error) => {
+    if (hasError) return
+    hasError = true
+    raiseNext(error)
+  }
+
+  value.map((v, key) => {
+    iterate(
+      function* () {
+        return yield v
+      }(),
+      ret => gotResultSuccess(key, ret),
+      err => gotResultError(key, err)
+    )
+  })
+
   return true
 }
 
