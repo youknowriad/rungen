@@ -98,42 +98,46 @@ runtime(function* () {
 
 ### Arrays
 
-yield arrays will make the runtime resolve all the values of the array and get the result as an array.
+By using the `all` helper, yield arrays will make the runtime resolve all the values of the array and get the result as an array.
 Here is an example combining the array and the subgenerator control.
 
 ```javascript
+import {all} from 'rungen'
+
 const increment = function* (input) {
   yield input
   return input + 1
 }
 
 runtime(function* () {
-  let output = yield [
+  let output = yield all([
     increment(1),
     4,
     increment(3)
-  ]
+  ])
   console.log(output) // [2, 4, 3]
 })
 ```
 
 ### Objects
 
-In the same way as arrays, yielding javascript objets will resolve all the attributes of the objects
+By using the `all` helper, in the same way as arrays, yielding javascript objets will resolve all the attributes of the objects
 and return an object containing the resolved values.
 
 ```javascript
+import {all} from 'rungen'
+
 const increment = function* (input) {
   yield input
   return input + 1
 }
 
 runtime(function* () {
-  let output = yield {
+  let output = yield all({
     a: increment(1),
     b: 4,
     c: increment(3)
-  }
+  })
   console.log(output) // { a: 2, b: 4, c: 3 }
 })
 ```

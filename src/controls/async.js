@@ -73,4 +73,17 @@ export const race = (value, next, rungen, yieldNext, raiseNext) => {
   return true
 }
 
-export default [promise, fork, join, race]
+const subscribe = (value, next) => {
+  if (!is.subscribe(value)) return false
+  if (!is.channel(value.channel)) {
+    throw new Error('the first argument of "subscribe" must be a valid channel')
+  }
+  const unsubscribe = value.channel.subscribe(ret => {
+    unsubscribe && unsubscribe()
+    next(ret)
+  })
+
+  return true
+}
+
+export default [promise, fork, join, race, subscribe]

@@ -2,7 +2,7 @@ import 'babel-polyfill'
 import expect from 'expect'
 import * as async from '../../src/controls/async'
 import create from '../../src/create'
-import {fork, delay, join, race, error} from '../../src/utils/helpers'
+import {fork, delay, join, race, error, all} from '../../src/utils/helpers'
 
 describe('Default controls', () => {
   it('promise control', (done) => {
@@ -52,15 +52,15 @@ describe('Default controls', () => {
       output.push(input)
     }
     const generator = function* () {
-      yield [
-        fork(forkedGenerator, 10, 1),
+      yield all([
+        fork(forkedGenerator, 40, 1),
         fork(forkedGenerator, 7, 2)
-      ]
+      ])
     }
     const expected = [1, 2, 2, 1]
 
     runtime(generator())
-    delay(12).then(() => {
+    delay(50).then(() => {
       expect(output).toEqual(expected)
       done()
     })

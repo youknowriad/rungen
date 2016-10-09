@@ -1,7 +1,7 @@
 import 'babel-polyfill'
 import expect from 'expect'
 import create from '../../src/create'
-import {error} from '../../src/utils/helpers'
+import {error, all} from '../../src/utils/helpers'
 
 describe('Builtin Controls', () => {
   it('error control', () => {
@@ -69,9 +69,9 @@ describe('Builtin Controls', () => {
       return yield input
     }
     const generator = function* () {
-      output = yield [
+      output = yield all([
         'a', subGenerator('c'), subGenerator('b')
-      ]
+      ])
     }
     const runtime = create()
     const expected = ['a', 'c', 'b']
@@ -84,9 +84,9 @@ describe('Builtin Controls', () => {
     let output
     const generator = function* () {
       try {
-        output = yield [
+        output = yield all([
           'a', error('test')
-        ]
+        ])
       } catch (e) {
         output = e
       }
@@ -104,11 +104,11 @@ describe('Builtin Controls', () => {
       return yield input
     }
     const generator = function* () {
-      output = yield {
+      output = yield all({
         c : subGenerator('c'),
         b : subGenerator('b'),
         a : 'a'
-      }
+      })
     }
     const runtime = create()
     const expected = { a : 'a', b : 'b', c : 'c' }
@@ -121,7 +121,7 @@ describe('Builtin Controls', () => {
     let output
     const generator = function* () {
       try {
-        output = yield { a : 'a', b : error('test') }
+        output = yield all({ a : 'a', b : error('test') })
       } catch (e) {
         output = e
       }
