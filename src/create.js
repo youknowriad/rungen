@@ -5,7 +5,7 @@ const create = (userControls = []) => {
   const controls = [...userControls, ...builtinControls]
 
   const runtime = (input, success = () => {}, error = () => {}) => {
-    const iterate = (gen, success = () => {}, error = () => {}) => {
+    const iterate = gen => {
       const yieldValue = isError => ret => {
         try {
           const { value, done } = isError ? gen.throw(ret) : gen.next(ret)
