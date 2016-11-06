@@ -1,7 +1,7 @@
 import keys from './keys'
 
 const is = {
-  obj       : value => typeof value === 'object',
+  obj       : value => typeof value === 'object' && !! value,
   all       : value => is.obj(value) && value.type === keys.all,
   error     : value => is.obj(value) && value.type === keys.error,
   array     : Array.isArray,
