@@ -8,7 +8,7 @@ This is also largely inspired from [redux-saga](https://github.com/yelouafi/redu
 API
 ---
 
-If you're familiar with co, The API here is slitely different. Instead of taking a generator and returning a promise.
+If you're familiar with `co`, The API here is slightly different. Instead of taking a generator and returning a promise.
 We can take basically any value (pass in an iterator to have the same behavior as co for generators) and as a result uses callbacks instead of a promise.
 
 ```javascript
@@ -32,7 +32,7 @@ const co = (input, ...args) => new Promise((resolve, reject) =>
 )
 co.wrap = input => runtime.bind(this, input)
 
-co(myGenerator, onSuccess, onError)
+co(myGenerator).then(onSuccess, onError)
 ```
 
 Generic ?
@@ -222,7 +222,7 @@ Race is a special control that lets you deal with race conditions. For example :
 import {race, delay} from 'rungen'
 
 runtime(function*() {
-  const { result, timeout } = race({
+  const { result, timeout } = yield race({
     result: fetch('/myApi'),
     timeout: delay(500)
   })
@@ -241,7 +241,7 @@ Race can also be used using arrays
 import {race, delay} from 'rungen'
 
 runtime(function*() {
-  const [result, timeout] = race([
+  const [result, timeout] = yield race([
     fetch('/myApi'),
     delay(500)
   })
@@ -258,12 +258,12 @@ Wrap controls
 -------------
 
 To ease testing generators without the need of mocks, we have to avoid triggering any side effect (api calls, timeouts...) in the generator.
-We use some of those effects in our previous example : calling fork, join or race helpers returs a simple javascript object and doest trigger any side effect.
-The wrap controls can be used to extend this mecanism to any function call.
+We use some of those effects in our previous example : calling fork, join or race helpers returns a simple javascript object and doesn't trigger any side effect.
+The wrap controls can be used to extend this mechanism to any function call.
 
 ## invoke, call and apply
 
-those are helpers used to tell the runtime to trigger a function call, but the function is not called directory in the generator.
+those are helpers used to tell the runtime to trigger a function call, but the function is not called directly in the generator.
 
 ```javascript
 import {create, invoke, wrapControls, asyncControls} from 'rungen'
@@ -282,7 +282,7 @@ const myGenerator = function* {
 runtime(myGenerator)
 ```
 
-testing this generator is now straighforward
+testing this generator is now straightforward
 
 ```javascript
 // the generator to test
