@@ -10,9 +10,9 @@ export const error = err => ({
   error: err
 })
 
-export const fork = (iterator, ...args) => ({
+export const fork = (generator, ...args) => ({
   type: keys.fork,
-  iterator,
+  generator,
   args
 })
 

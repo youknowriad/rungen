@@ -182,8 +182,8 @@ const subGenerator = function*(timeout, input) {
 }
 
 runtime(function*() {
-  yield fork(subgenerator(10, 1))
-  yield fork(subgenerator(5, 2))
+  yield fork(subgenerator, 10, 1)
+  yield fork(subgenerator, 5, 2)
 })
 
 // this will output 2 than 1
@@ -202,8 +202,8 @@ const subGenerator = function*(timeout, input) {
 }
 
 runtime(function*() {
-  const task1 = yield fork(subgenerator(10, 1))
-  const task2 = yield fork(subgenerator(5, 2))
+  const task1 = yield fork(subgenerator, 10, 1)
+  const task2 = yield fork(subgenerator, 5, 2)
 
   yield delay(6)
   const output = yield join(task1)

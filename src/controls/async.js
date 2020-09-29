@@ -15,7 +15,7 @@ export const fork = (value, next, rungen) => {
   const dispatcher = createDispatcher()
   forkedTasks.set(task, dispatcher)
   rungen(
-    value.iterator.apply(null, value.args),
+    value.generator.apply(null, value.args),
     result => dispatcher.dispatch(result),
     err => dispatcher.dispatch(error(err))
   )
